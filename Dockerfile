@@ -1,8 +1,8 @@
 FROM python:3.11-slim
 
-# Instalar Java (necesario para EPUBCheck)
+# Instalar Java y herramientas necesarias
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jre-headless wget && \
+    apt-get install -y openjdk-11-jre-headless wget unzip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -11,12 +11,9 @@ WORKDIR /app
 
 # Descargar EPUBCheck
 RUN wget https://github.com/w3c/epubcheck/releases/download/v5.1.0/epubcheck-5.1.0.zip && \
-    apt-get update && apt-get install -y unzip && \
     unzip epubcheck-5.1.0.zip && \
     mv epubcheck-5.1.0/epubcheck.jar /app/epubcheck.jar && \
-    rm -rf epubcheck-5.1.0 epubcheck-5.1.0.zip && \
-    apt-get remove -y unzip && \
-    apt-get clean
+    rm -rf epubcheck-5.1.0 epubcheck-5.1.0.zip
 
 # Copiar requirements
 COPY requirements.txt .
